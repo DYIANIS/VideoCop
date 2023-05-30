@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
@@ -11,9 +8,6 @@ namespace VideoCop
     class Сopier
     {
         private Form1 Form1;
-
-        //private BackgroundWorker BackgroundWorkerForm1 { get; set; }
-
 
         public void SearchFiles(string sDir)
         {
@@ -33,7 +27,7 @@ namespace VideoCop
                             continue;
                         }
                     }
-                    else 
+                    else
                     {
                         Form1.listBox1.Items.Add(file);
                     }
@@ -64,12 +58,14 @@ namespace VideoCop
                     return;
                 }
 
-                Form1.TextProgressBar1.Invoke((MethodInvoker)delegate {
+                Form1.TextProgressBar1.Invoke((MethodInvoker)delegate
+                {
                     Form1.TextProgressBar1.CustomText = System.IO.Path.GetFileName(file);
                     Form1.TextProgressBar1.VisualMode = ProgressBarDisplayMode.TextAndPercentage;
                 });
 
-                Form1.TextProgressBar2.Invoke((MethodInvoker)delegate {
+                Form1.TextProgressBar2.Invoke((MethodInvoker)delegate
+                {
                     Form1.TextProgressBar2.VisualMode = ProgressBarDisplayMode.CustomText;
                     Form1.TextProgressBar2.Maximum = Form1.listBox1.Items.Count;
                     Form1.TextProgressBar2.CustomText = "Файл: " + index + " из " + Form1.listBox1.Items.Count;
@@ -123,35 +119,12 @@ namespace VideoCop
                     outputFs.Write(buffer, 0, wasRead);
                     counter++;
 
-                    if (counter <= Form1.TextProgressBar1.Maximum) 
+                    if (counter <= Form1.TextProgressBar1.Maximum)
                         Form1.backgroundWorker1.ReportProgress(counter);
                 }
             }
 
             File.Delete(@inputFileName);
-
-            //System.IO.File.Move(inputFileName, outputFileName);
-
-            /*try
-            {
-                Microsoft.VisualBasic.FileIO.FileSystem.MoveFile(inputFileName, outputFileName, true);
-
-            }*/
-            /*try
-            {
-                Microsoft.VisualBasic.FileIO.FileSystem.MoveDirectory("F:\\DCIM", "V:\\10.01.2023\\Штуро Д.В", Microsoft.VisualBasic.FileIO.UIOption.AllDialogs);
-                
-            }*/
-            /*catch (System.OperationCanceledException ex)
-            {
-                MessageBox.Show("Копирование отменено пользователем!\n");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Ошибка копирования!\n" + ex.Message);
-            }*/
-
-
         }
 
         private List<string> GetVideoFiles(string sDir)

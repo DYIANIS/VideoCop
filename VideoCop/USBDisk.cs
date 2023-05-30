@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using System.Windows.Forms;
 
 namespace VideoCop
@@ -16,7 +13,6 @@ namespace VideoCop
             List<USBDiskInfo> usbDiskInfoList = new List<USBDiskInfo>();
             string diskName = string.Empty;
 
-            //Получение списка накопителей подключенных через интерфейс USB
             foreach (System.Management.ManagementObject drive in
                       new System.Management.ManagementObjectSearcher(
                        "select * from Win32_DiskDrive where InterfaceType='USB'").Get())
@@ -52,8 +48,6 @@ namespace VideoCop
         {
             string[] splitDeviceId = deviceId.Split('\\');
             string Ven;
-            //Разбиваем строку на несколько частей. 
-            //Каждая чаcть отделяется по символу &
             string[] splitVen = splitDeviceId[1].Split('&');
 
             Ven = splitVen[1].Replace("VEN_", "");
@@ -65,8 +59,6 @@ namespace VideoCop
         {
             string[] splitDeviceId = deviceId.Split('\\');
             string Prod;
-            //Разбиваем строку на несколько частей. 
-            //Каждая чаcть отделяется по символу &
             string[] splitProd = splitDeviceId[1].Split('&');
 
             Prod = splitProd[2].Replace("PROD_", ""); ;
@@ -78,7 +70,6 @@ namespace VideoCop
         {
             USBDiskInfo USBDiskInfo = new USBDiskInfo();
 
-            //Получаем букву накопителя
             foreach (System.Management.ManagementObject partition in
             new System.Management.ManagementObjectSearcher(
                 "ASSOCIATORS OF {Win32_DiskDrive.DeviceID='" + drive["DeviceID"]
@@ -90,14 +81,12 @@ namespace VideoCop
                       + partition["DeviceID"]
                       + "'} WHERE AssocClass = Win32_LogicalDiskToPartition").Get())
                 {
-                    //Получение буквы устройства
                     diskName = disk["Name"].ToString().Trim();
                     USBDiskInfo.DiskLetter = diskName;
                 }
             }
 
-            //Получение имени устройства
-            USBDiskInfo.DiskLabel = "";// (string)DriveInfo.GetDrives().Where(drive => drive.Name == (diskName + ":\\")).;
+            USBDiskInfo.DiskLabel = "";
 
             var drives = DriveInfo.GetDrives().Where(drive123 => drive123.Name == (diskName + "\\"));
 
@@ -107,41 +96,30 @@ namespace VideoCop
                 USBDiskInfo.DiskLabel = "USB-накопитель";
             }
 
-            //Получение модели устройства
             USBDiskInfo.Model = (string)drive["Model"];
 
-            //Получение Ven устройства
             USBDiskInfo.Ven = parseVenFromDeviceID(drive["PNPDeviceID"].ToString().Trim());
 
-            //Получение Prod устройства
             USBDiskInfo.Prod = parseProdFromDeviceID(drive["PNPDeviceID"].ToString().Trim());
 
-            //Получение Rev устройства
             USBDiskInfo.Rev = parseRevFromDeviceID(drive["PNPDeviceID"].ToString().Trim());
 
-            //Получение серийного номера устройства
             string serial = drive["SerialNumber"].ToString().Trim();
-            //WMI не всегда может вернуть серийный номер накопителя через данный класс
             if (serial.Length > 1)
                 USBDiskInfo.SerialNumber = serial;
             else
-                //Если серийный не получен стандартным путем,
-                //Парсим информацию Plug and Play Device ID 
                 USBDiskInfo.SerialNumber = parseSerialFromDeviceID(drive["PNPDeviceID"].ToString().Trim());
 
-            //Получение объема устройства в гигабайтах
             decimal dSize = Math.Round((Convert.ToDecimal(
           new System.Management.ManagementObject("Win32_LogicalDisk.DeviceID='"
                   + diskName + "'")["Size"]) / 1073741824), 2);
             USBDiskInfo.DiskSize = dSize + " GB";
 
-            //Получение свободного места на устройстве в гигабайтах
             decimal dFree = Math.Round((Convert.ToDecimal(
           new System.Management.ManagementObject("Win32_LogicalDisk.DeviceID='"
                   + diskName + "'")["FreeSpace"]) / 1073741824), 2);
             USBDiskInfo.DiskFree = dFree + " GB";
 
-            //Получение использованного места на устройстве
             decimal dUsed = dSize - dFree;
             USBDiskInfo.DiskUsed = dUsed + " GB";
 
@@ -152,8 +130,6 @@ namespace VideoCop
         {
             string[] splitDeviceId = deviceId.Split('\\');
             string Rev;
-            //Разбиваем строку на несколько частей. 
-            //Каждая чаcть отделяется по символу &
             string[] splitRev = splitDeviceId[1].Split('&');
 
             Rev = splitRev[3].Replace("REV_", ""); ;
@@ -197,6 +173,5 @@ namespace VideoCop
         {
             return this.DiskLabel + "( " + this.DiskLetter + " )";
         }
-
     }
 }

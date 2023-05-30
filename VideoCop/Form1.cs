@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace VideoCop
@@ -211,7 +207,7 @@ namespace VideoCop
 
             stopwatch.Stop();
             TimeSpan timeSpan = stopwatch.Elapsed;
-            MessageBox.Show("Копирование завершено!\n\n" + "Время копирования: " + timeSpan.Hours + "ч " + timeSpan.Minutes + "м " + timeSpan.Seconds + "c"); 
+            MessageBox.Show("Копирование завершено!\n\n" + "Время копирования: " + timeSpan.Hours + "ч " + timeSpan.Minutes + "м " + timeSpan.Seconds + "c");
 
             comboBox1.Enabled = true;
             comboBox2.Enabled = true;
@@ -236,7 +232,7 @@ namespace VideoCop
             {
                 worker.Work(this);
             }));*/
-            
+
             worker.Work(this);
         }
 

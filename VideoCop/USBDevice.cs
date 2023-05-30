@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Management;
 
 namespace VideoCop
@@ -31,7 +27,7 @@ namespace VideoCop
         }
     }
 
-public class USBDeviceInfo
+    public class USBDeviceInfo
     {
         public USBDeviceInfo(string deviceID, string pnpDeviceID, string description)
         {
